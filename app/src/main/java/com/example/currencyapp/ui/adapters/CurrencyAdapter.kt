@@ -7,9 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.currencyapp.R
+import com.example.currencyapp.R.layout
 import com.example.currencyapp.data.model.CurrencyRate
+import kotlinx.android.synthetic.main.currency_list_item.view.*
 
-class CurrencyAdapter (val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CurrencyAdapter (val context: Context) : RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
     private val currencyRates = ArrayList<CurrencyRate>()
     var currencyClickListener: ((CurrencyRate) -> Unit)? = null
 
@@ -32,26 +36,25 @@ class CurrencyAdapter (val context: Context) : RecyclerView.Adapter<RecyclerView
         holder.run {
             currencyRate.flag?.let {
                 Glide.with(context).load(it)
-                    .placeholder(R.drawable.ic_storefront)
-                    .into(venueImage)
+                    .placeholder(R.drawable.ic_flag)
+                    .into(currencyRateImage)
             }
-            venueName.text = venue.name
-            venueAddress.text = venue.city
+            currencyRateShortName.text = currencyRate.shortName
             itemView.setOnClickListener {
-                venueClickListener?.let { it(venue) }
+                currencyClickListener?.let { it(currencyRate) }
             }
         }
     }
 
-    fun setItems(newVenues: List<Venue>) {
-        venues.clear()
-        venues.addAll(newVenues)
+    fun setItems(newVenues: List<CurrencyRate>) {
+        currencyRates.clear()
+        currencyRates.addAll(newVenues)
         notifyDataSetChanged()
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val venueImage: AppCompatImageView = view.venueImage
-        val venueName: TextView = view.venueName
-        val venueAddress: TextView = view.venueAddress
+        val currencyRateImage: AppCompatImageView = view.currencyImage
+        val currencyRateShortName: TextView = view.currencyName
+        val currencyRateLongName: TextView = view.currencyName
     }
 }
