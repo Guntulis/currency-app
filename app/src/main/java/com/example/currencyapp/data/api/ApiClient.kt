@@ -7,7 +7,7 @@ import retrofit2.http.*
 interface ApiClient {
 
     @GET("/api/android/latest")
-    fun getVenueList(
+    fun getCurrencyRates(
         @Query("base") base: String
     ): Observable<CurrencyRatesResponse>
 }
