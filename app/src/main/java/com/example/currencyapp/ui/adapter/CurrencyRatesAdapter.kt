@@ -33,11 +33,9 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currencyRate = currencyRates[position]
         holder.run {
-            currencyRate.flag?.let {
-                currencyRateImage.setImageResource(it)
-            }
-            currencyRateShortName.text = currencyRate.shortName
-            currencyRateLongName.text = currencyRate.shortName
+            currencyRateImage.setImageResource(currencyRate.flagResId)
+            currencyRateShortName.text = currencyRate.currencyIsoCode
+            currencyRateLongName.text = context.getString(currencyRate.currencyNameResId)
             currencyRateValue.text = String.format("%.2f", currencyRate.rate)
             itemView.setOnClickListener {
                 currencyClickListener?.let { it(currencyRate) }
