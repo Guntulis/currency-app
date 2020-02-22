@@ -41,6 +41,8 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
                     .into(currencyRateImage)
             }
             currencyRateShortName.text = currencyRate.shortName
+            currencyRateLongName.text = currencyRate.shortName
+            currencyRateValue.text = String.format("%.2f", currencyRate.rate)
             itemView.setOnClickListener {
                 currencyClickListener?.let { it(currencyRate) }
             }
@@ -55,7 +57,8 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val currencyRateImage: AppCompatImageView = view.currencyImage
-        val currencyRateShortName: TextView = view.currencyName
-        val currencyRateLongName: TextView = view.currencyName
+        val currencyRateShortName: TextView = view.currencyShortName
+        val currencyRateLongName: TextView = view.currencyLongName
+        val currencyRateValue: TextView = view.currencyRate
     }
 }

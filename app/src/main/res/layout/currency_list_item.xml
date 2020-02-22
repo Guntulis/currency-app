@@ -10,21 +10,52 @@
         android:id="@+id/currencyImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="@dimen/content_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_flag" />
 
     <TextView
-        android:id="@+id/currencyName"
+        android:id="@+id/currencyShortName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/content_padding"
+        android:letterSpacing="-0.02"
         android:text=""
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/currencyLongName"
         app:layout_constraintLeft_toRightOf="@id/currencyImage"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="USD" />
+
+    <TextView
+        android:id="@+id/currencyLongName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/content_padding"
+        android:letterSpacing="-0.01"
+        android:text=""
+        android:textColor="@color/grey"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/currencyImage"
+        app:layout_constraintTop_toBottomOf="@id/currencyShortName"
+        tools:text="USD" />
+
+    <TextView
+        android:id="@+id/currencyRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/content_padding"
+        android:letterSpacing="0.02"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1183.06" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
