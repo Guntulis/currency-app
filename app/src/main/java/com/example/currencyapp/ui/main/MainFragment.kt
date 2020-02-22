@@ -4,10 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.example.currencyapp.databinding.MainFragmentBinding
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-class MainFragment : Fragment() {
+class MainFragment : DaggerFragment() {
+
+    @Inject
+    lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -15,6 +19,11 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return MainFragmentBinding.inflate(inflater, container, false).root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel.loadCurrencyRates("EUR")
     }
 
     companion object {
