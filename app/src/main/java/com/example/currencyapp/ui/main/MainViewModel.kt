@@ -1,9 +1,8 @@
 package com.example.currencyapp.ui.main
 
 import androidx.lifecycle.ViewModel
-import javax.inject.Inject
 
-class MainViewModel @Inject constructor() : ViewModel() {
+class MainViewModel : ViewModel() {
 
     /*@Inject
     lateinit var currencyRatesRepository : CurrencyRatesRepository

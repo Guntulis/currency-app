@@ -6,12 +6,11 @@ import androidx.databinding.DataBindingUtil
 import com.example.currencyapp.R
 import com.example.currencyapp.databinding.MainActivityBinding
 import com.example.currencyapp.ui.main.MainFragment
-import dagger.android.AndroidInjection
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        //AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         DataBindingUtil.setContentView<MainActivityBinding>(this, R.layout.main_activity)
         if (savedInstanceState == null) {
