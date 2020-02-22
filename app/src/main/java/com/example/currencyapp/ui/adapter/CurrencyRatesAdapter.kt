@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.currencyapp.R
 import com.example.currencyapp.R.layout
 import com.example.currencyapp.data.model.CurrencyRate
 import com.example.currencyapp.ui.adapter.CurrencyRatesAdapter.ViewHolder
@@ -36,9 +34,7 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
         val currencyRate = currencyRates[position]
         holder.run {
             currencyRate.flag?.let {
-                Glide.with(context).load(it)
-                    .placeholder(R.drawable.ic_flag)
-                    .into(currencyRateImage)
+                currencyRateImage.setImageResource(it)
             }
             currencyRateShortName.text = currencyRate.shortName
             currencyRateLongName.text = currencyRate.shortName
