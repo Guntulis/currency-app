@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Currency App</string>
     <string name="rates">Rates</string>
+    <string name="error_message">Failed to load data</string>
 </resources>

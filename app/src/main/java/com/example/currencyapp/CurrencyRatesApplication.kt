@@ -3,6 +3,7 @@ package com.example.currencyapp
 import android.app.Application
 import com.example.currencyapp.dagger.component.ApplicationComponent
 import com.example.currencyapp.dagger.component.DaggerApplicationComponent
+import com.example.currencyapp.dagger.module.AppModule
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -18,7 +19,7 @@ class CurrencyRatesApplication : Application(), HasAndroidInjector {
     override fun onCreate() {
         super.onCreate()
 
-        appComponent = DaggerApplicationComponent.builder().build()
+        appComponent = DaggerApplicationComponent.builder().appModule(AppModule(this)).build()
         appComponent.inject(this)
     }
 

@@ -1,7 +1,10 @@
 package com.example.currencyapp.dagger.module
 
+import android.app.Application
+import android.content.Context
 import com.example.currencyapp.BuildConfig
 import com.example.currencyapp.data.api.ApiClient
+import com.example.currencyapp.ui.adapter.CurrencyRatesAdapter
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -10,7 +13,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class AppModule {
+class AppModule(private val application: Application) {
+
+    @Provides
+    fun provideContext(): Context {
+        return application.applicationContext
+    }
 
     @Provides
     @Singleton
@@ -26,5 +34,11 @@ class AppModule {
     @Singleton
     fun providesApi(retrofit: Retrofit): ApiClient {
         return retrofit.create(ApiClient::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCurrencyRatesAdapter(context: Context): CurrencyRatesAdapter {
+        return CurrencyRatesAdapter(context)
     }
 }

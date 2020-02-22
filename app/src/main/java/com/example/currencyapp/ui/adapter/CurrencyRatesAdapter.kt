@@ -47,9 +47,9 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
         }
     }
 
-    fun setItems(newVenues: List<CurrencyRate>) {
+    fun setItems(newRates: List<CurrencyRate>) {
         currencyRates.clear()
-        currencyRates.addAll(newVenues)
+        currencyRates.addAll(newRates)
         notifyDataSetChanged()
     }
 

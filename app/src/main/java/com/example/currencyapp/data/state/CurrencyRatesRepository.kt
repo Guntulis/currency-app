@@ -10,39 +10,35 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class CurrencyRatesRepository(
-    private val apiClient: ApiClient
-) {
-
-    //var apiClient = RetrofitService.createService(ApiClient::class.java)
+class CurrencyRatesRepository(private val apiClient: ApiClient) {
 
     companion object {
         val TAG: String = CurrencyRatesRepository::class.java.simpleName
     }
 
-    private val _currencyRatesState = MutableLiveData<Resource<CurrencyRatesResponse>>()
-    val currencyRatesState: LiveData<Resource<CurrencyRatesResponse>>
-        get() = _currencyRatesState
+    private val _currencyRatesResponseState = MutableLiveData<Resource<CurrencyRatesResponse>>()
+    val currencyRatesResponseState: LiveData<Resource<CurrencyRatesResponse>>
+        get() = _currencyRatesResponseState
 
     private val _compositeDisposable = CompositeDisposable()
 
     fun loadCurrencyRates(baseCurrency: String?) {
         if (baseCurrency == null) {
-            _currencyRatesState.value = Resource.Error("Base currency is null")
+            _currencyRatesResponseState.value = Resource.Error("Base currency is null")
         } else {
-            _currencyRatesState.value = Resource.Loading()
+            _currencyRatesResponseState.value = Resource.Loading()
             apiClient.getCurrencyRates(baseCurrency)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { currencyRatesResponse ->
                         currencyRatesResponse?.let {
-                            _currencyRatesState.value = Resource.Complete(it)
+                            _currencyRatesResponseState.value = Resource.Complete(it)
                         }
                     },
                     { error ->
                         val errorMessage = "Failed to get currency rates"
-                        _currencyRatesState.value = Resource.Error(errorMessage)
+                        _currencyRatesResponseState.value = Resource.Error(errorMessage)
                         Log.e(TAG, errorMessage, error)
                     }
                 ).also { _compositeDisposable.add(it) }
