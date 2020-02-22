@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.currencyapp.data.Timer
 import com.example.currencyapp.data.api.Resource.*
 import com.example.currencyapp.databinding.MainFragmentBinding
 import com.example.currencyapp.ui.adapter.CurrencyRatesAdapter
@@ -17,6 +18,8 @@ class MainFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModel: MainViewModel
+    @Inject
+    lateinit var timer: Timer
     @Inject
     lateinit var currencyRatesAdapter: CurrencyRatesAdapter
 
@@ -31,7 +34,17 @@ class MainFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
-        viewModel.loadCurrencyRates("EUR")
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        timer.startTimer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        timer.stopTimer()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -57,6 +70,13 @@ class MainFragment : DaggerFragment() {
         }
         viewModel.listData.observeIt(this) { currencyRates ->
             currencyRates?.let { currencyRatesAdapter.setItems(it) }
+        }
+        timer.timerEvent.observeIt(this) { event ->
+            when (event) {
+                is Timer.TimerEvent.Tick -> {
+                    viewModel.refreshRates()
+                }
+            }
         }
     }
 

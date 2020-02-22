@@ -1,5 +1,6 @@
 package com.example.currencyapp.ui.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -105,7 +106,12 @@ class MainViewModel(private val currencyRatesRepository: CurrencyRatesRepository
         }
     }
 
-    fun loadCurrencyRates(baseCurrency: String?) {
-        currencyRatesRepository.loadCurrencyRates(baseCurrency)
+    fun refreshRates() {
+        Log.d(TAG, "Refreshing rates")
+        currencyRatesRepository.loadCurrencyRates("EUR")
+    }
+
+    companion object {
+        val TAG: String = MainViewModel::class.java.simpleName
     }
 }

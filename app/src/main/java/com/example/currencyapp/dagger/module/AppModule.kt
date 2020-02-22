@@ -3,6 +3,7 @@ package com.example.currencyapp.dagger.module
 import android.app.Application
 import android.content.Context
 import com.example.currencyapp.BuildConfig
+import com.example.currencyapp.data.Timer
 import com.example.currencyapp.data.api.ApiClient
 import com.example.currencyapp.ui.adapter.CurrencyRatesAdapter
 import dagger.Module
@@ -40,5 +41,11 @@ class AppModule(private val application: Application) {
     @Singleton
     fun provideCurrencyRatesAdapter(context: Context): CurrencyRatesAdapter {
         return CurrencyRatesAdapter(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTimer(): Timer {
+        return Timer()
     }
 }

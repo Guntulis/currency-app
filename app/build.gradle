@@ -23,10 +23,12 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "API_URL", '"https://hiring.revolut.codes/"'
+            buildConfigField "long", "REFRESH_TIME_MS", "1000"
         }
         debug {
             debuggable true
             buildConfigField "String", "API_URL", '"https://hiring.revolut.codes"'
+            buildConfigField "long", "REFRESH_TIME_MS", "1000"
         }
     }
 

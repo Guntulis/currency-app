@@ -12,10 +12,6 @@ import io.reactivex.schedulers.Schedulers
 
 class CurrencyRatesRepository(private val apiClient: ApiClient) {
 
-    companion object {
-        val TAG: String = CurrencyRatesRepository::class.java.simpleName
-    }
-
     private val _currencyRatesResponseState = MutableLiveData<Resource<CurrencyRatesResponse>>()
     val currencyRatesResponseState: LiveData<Resource<CurrencyRatesResponse>>
         get() = _currencyRatesResponseState
@@ -43,5 +39,9 @@ class CurrencyRatesRepository(private val apiClient: ApiClient) {
                     }
                 ).also { _compositeDisposable.add(it) }
         }
+    }
+
+    companion object {
+        val TAG: String = CurrencyRatesRepository::class.java.simpleName
     }
 }
