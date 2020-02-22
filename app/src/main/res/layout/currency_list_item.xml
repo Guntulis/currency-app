@@ -20,13 +20,13 @@
         android:id="@+id/currencyShortName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/content_padding"
+        android:layout_marginStart="@dimen/left_padding"
         android:letterSpacing="-0.02"
         android:text=""
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/currencyLongName"
-        app:layout_constraintLeft_toRightOf="@id/currencyImage"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="USD" />
 
@@ -34,13 +34,13 @@
         android:id="@+id/currencyLongName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/content_padding"
+        android:layout_marginStart="@dimen/left_padding"
         android:letterSpacing="-0.01"
         android:text=""
         android:textColor="@color/grey"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/currencyImage"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/currencyShortName"
         tools:text="USD" />
 
