@@ -4,35 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.currencyapp.R
-import javax.inject.Inject
+import com.example.currencyapp.databinding.MainFragmentBinding
+import dagger.android.support.DaggerFragment
 
-class MainFragment : Fragment() {
-
-    @Inject
-    lateinit var viewModel: MainViewModel
+class MainFragment : DaggerFragment() {
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //viewModel.loadCurrencyRates()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        //viewModel.
-
+    ): View? {
+        return MainFragmentBinding.inflate(inflater, container, false).root
     }
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance(): MainFragment = MainFragment()
     }
 }

@@ -10,7 +10,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class CurrencyRatesRepository(private val apiClient: ApiClient) {
+class CurrencyRatesRepository(
+    private val apiClient: ApiClient
+) {
+
+    //var apiClient = RetrofitService.createService(ApiClient::class.java)
 
     companion object {
         val TAG: String = CurrencyRatesRepository::class.java.simpleName

@@ -1,9 +1,14 @@
 package com.example.currencyapp.ui.main
 
 import androidx.lifecycle.ViewModel
-import com.example.currencyapp.data.state.CurrencyRatesRepository
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(private val currencyRatesRepository: CurrencyRatesRepository) : ViewModel() {
+class MainViewModel @Inject constructor() : ViewModel() {
 
+    /*@Inject
+    lateinit var currencyRatesRepository : CurrencyRatesRepository
+
+    fun loadCurrencyRates(baseCurrency: String?) {
+        currencyRatesRepository.loadCurrencyRates(baseCurrency)
+    }*/
 }
