@@ -11,9 +11,10 @@ import com.bumptech.glide.Glide
 import com.example.currencyapp.R
 import com.example.currencyapp.R.layout
 import com.example.currencyapp.data.model.CurrencyRate
+import com.example.currencyapp.ui.adapters.CurrencyRatesAdapter.ViewHolder
 import kotlinx.android.synthetic.main.currency_list_item.view.*
 
-class CurrencyAdapter (val context: Context) : RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
+class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<ViewHolder>() {
     private val currencyRates = ArrayList<CurrencyRate>()
     var currencyClickListener: ((CurrencyRate) -> Unit)? = null
 
