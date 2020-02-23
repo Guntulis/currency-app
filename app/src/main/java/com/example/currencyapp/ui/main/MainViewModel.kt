@@ -21,27 +21,31 @@ class MainViewModel(
     val currencyRatesResponse: LiveData<Resource<CurrencyRatesResponse>>
         get() = currencyRatesRepository.currencyRatesResponseState
 
+    private val gson = Gson()
+    private val savedResponse =
+        gson.fromJson(appPreferences.ratesResponse, CurrencyRatesResponse::class.java)
+    private val savedList = toCurrencyRateList(savedResponse?.rates)
+
     val listData: LiveData<List<CurrencyRate>> =
         Transformations.map(currencyRatesRepository.currencyRatesResponseState) { response ->
             when (response) {
                 is Complete -> {
-                    appPreferences.ratesResponse = Gson().toJson(response.value)
-                    response.value.rates?.map { rate ->
-                        rate.run {
-                            CurrencyRate(resolveFlag(key), key, resolveCurrencyName(key), value)
-                        }
-                    }.orEmpty()
+                    appPreferences.ratesResponse = gson.toJson(response.value)
+                    toCurrencyRateList(response.value.rates)
                 }
                 else -> {
-                    val savedResponse = Gson().fromJson(appPreferences.ratesResponse, CurrencyRatesResponse::class.java)
-                    savedResponse?.rates?.map { rate ->
-                        rate.run {
-                            CurrencyRate(resolveFlag(key), key, resolveCurrencyName(key), value)
-                        }
-                    }.orEmpty()
+                    savedList
                 }
             }
         }
+
+    private fun toCurrencyRateList(rates: Map<String, Float>?): List<CurrencyRate> {
+        return rates?.map { rate ->
+            rate.run {
+                CurrencyRate(resolveFlag(key), key, resolveCurrencyName(key), value)
+            }
+        }.orEmpty()
+    }
 
     private fun resolveFlag(countryCode: String): Int {
         return when (countryCode) {

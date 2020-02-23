@@ -12,6 +12,6 @@ class AppPreferences(context: Context) {
 
     companion object {
         private const val PREFS_FILENAME = "com.example.currencyapp.prefs"
-        private const val RATES_RESPONSE_KEY = "base_currency"
+        private const val RATES_RESPONSE_KEY = "rates_response"
     }
 }
