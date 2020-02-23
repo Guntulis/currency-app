@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.currencyapp.data.Timer
-import com.example.currencyapp.data.api.Resource.*
 import com.example.currencyapp.databinding.MainFragmentBinding
 import com.example.currencyapp.ui.adapter.CurrencyRatesAdapter
 import com.example.currencyapp.ui.util.observeIt
@@ -33,8 +31,7 @@ class MainFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRecyclerView()
-
+        recyclerView.adapter = currencyRatesAdapter
     }
 
     override fun onResume() {
@@ -49,27 +46,10 @@ class MainFragment : DaggerFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.currencyRatesResponse.observeIt(this) { state ->
-            when (state) {
-                is Complete -> {
-                    progressBar.visibility = View.GONE
-                    errorMessage.visibility = View.GONE
-                    recyclerView.visibility = View.VISIBLE
-                }
-                is Loading -> {
-                    progressBar.visibility = View.VISIBLE
-                    errorMessage.visibility = View.GONE
-                    recyclerView.visibility = View.INVISIBLE
-                }
-                is Error -> {
-                    progressBar.visibility = View.GONE
-                    errorMessage.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
-                }
-            }
-        }
         viewModel.listData.observeIt(this) { currencyRates ->
-            currencyRates?.let { currencyRatesAdapter.setItems(it) }
+            currencyRates?.let {
+                currencyRatesAdapter.setItems(it)
+            }
         }
         timer.timerEvent.observeIt(this) { event ->
             when (event) {
@@ -78,17 +58,6 @@ class MainFragment : DaggerFragment() {
                 }
             }
         }
-    }
-
-    private fun initRecyclerView() {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        currencyRatesAdapter.currencyClickListener = { product ->
-            //navigation.navigateToProductOptions(product, null)
-        }
-        recyclerView.adapter = currencyRatesAdapter
-        recyclerView.itemAnimator = null
-        progressBar.visibility = View.VISIBLE
-        recyclerView.visibility = View.INVISIBLE
     }
 
     companion object {

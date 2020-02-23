@@ -3,6 +3,7 @@ package com.example.currencyapp.dagger.module
 import android.app.Application
 import android.content.Context
 import com.example.currencyapp.BuildConfig
+import com.example.currencyapp.data.AppPreferences
 import com.example.currencyapp.data.Timer
 import com.example.currencyapp.data.api.ApiClient
 import com.example.currencyapp.ui.adapter.CurrencyRatesAdapter
@@ -35,6 +36,12 @@ class AppModule(private val application: Application) {
     @Singleton
     fun providesApi(retrofit: Retrofit): ApiClient {
         return retrofit.create(ApiClient::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providesAppPreferences(context: Context): AppPreferences {
+        return AppPreferences(context)
     }
 
     @Provides

@@ -5,13 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.currencyapp.R
+import com.example.currencyapp.data.AppPreferences
 import com.example.currencyapp.data.api.Resource
 import com.example.currencyapp.data.api.Resource.Complete
 import com.example.currencyapp.data.model.CurrencyRate
 import com.example.currencyapp.data.model.CurrencyRatesResponse
 import com.example.currencyapp.data.state.CurrencyRatesRepository
+import com.google.gson.Gson
 
-class MainViewModel(private val currencyRatesRepository: CurrencyRatesRepository) : ViewModel() {
+class MainViewModel(
+    private val currencyRatesRepository: CurrencyRatesRepository,
+    private val appPreferences: AppPreferences
+) : ViewModel() {
 
     val currencyRatesResponse: LiveData<Resource<CurrencyRatesResponse>>
         get() = currencyRatesRepository.currencyRatesResponseState
@@ -20,13 +25,21 @@ class MainViewModel(private val currencyRatesRepository: CurrencyRatesRepository
         Transformations.map(currencyRatesRepository.currencyRatesResponseState) { response ->
             when (response) {
                 is Complete -> {
+                    appPreferences.ratesResponse = Gson().toJson(response.value)
                     response.value.rates?.map { rate ->
                         rate.run {
                             CurrencyRate(resolveFlag(key), key, resolveCurrencyName(key), value)
                         }
                     }.orEmpty()
                 }
-                else -> emptyList()
+                else -> {
+                    val savedResponse = Gson().fromJson(appPreferences.ratesResponse, CurrencyRatesResponse::class.java)
+                    savedResponse?.rates?.map { rate ->
+                        rate.run {
+                            CurrencyRate(resolveFlag(key), key, resolveCurrencyName(key), value)
+                        }
+                    }.orEmpty()
+                }
             }
         }
 
