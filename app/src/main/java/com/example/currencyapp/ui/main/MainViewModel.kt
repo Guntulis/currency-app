@@ -24,14 +24,16 @@ class MainViewModel(
     private val gson = Gson()
     private val savedResponse =
         gson.fromJson(appPreferences.ratesResponse, CurrencyRatesResponse::class.java)
-    private val savedList = toCurrencyRateList(savedResponse?.rates)
+    private var savedList = toCurrencyRateList(savedResponse?.rates)
 
     val listData: LiveData<List<CurrencyRate>> =
         Transformations.map(currencyRatesRepository.currencyRatesResponseState) { response ->
             when (response) {
                 is Complete -> {
                     appPreferences.ratesResponse = gson.toJson(response.value)
-                    toCurrencyRateList(response.value.rates)
+                    val rateList = toCurrencyRateList(response.value.rates)
+                    savedList = rateList
+                    rateList
                 }
                 else -> {
                     savedList
@@ -42,9 +44,13 @@ class MainViewModel(
     private fun toCurrencyRateList(rates: Map<String, Float>?): List<CurrencyRate> {
         return rates?.map { rate ->
             rate.run {
-                CurrencyRate(resolveFlag(key), key, resolveCurrencyName(key), value)
+                CurrencyRate(resolveFlag(key), key, resolveCurrencyName(key), calculateValue(value))
             }
         }.orEmpty()
+    }
+
+    private fun calculateValue(value: Float): Float {
+        return appPreferences.multiplier * value
     }
 
     private fun resolveFlag(countryCode: String): Int {
@@ -126,6 +132,10 @@ class MainViewModel(
     fun refreshRates() {
         Log.d(TAG, "Refreshing rates")
         currencyRatesRepository.loadCurrencyRates("EUR")
+    }
+
+    fun itemWasClicked(currencyRate: CurrencyRate) {
+        appPreferences.multiplier++
     }
 
     companion object {

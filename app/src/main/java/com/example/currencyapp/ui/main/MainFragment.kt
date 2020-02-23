@@ -32,6 +32,9 @@ class MainFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.adapter = currencyRatesAdapter
+        currencyRatesAdapter.currencyClickListener = {
+            viewModel.itemWasClicked(it)
+        }
     }
 
     override fun onResume() {
