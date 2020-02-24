@@ -5,7 +5,7 @@ data class CurrencyRate(
     val currencyIsoCode: String,
     val currencyNameResId: Int,
     val rate: Float,
-    var type: Int = TYPE_NORMAL
+    var type: Int
 ) {
     companion object {
         const val TYPE_BASE = 1

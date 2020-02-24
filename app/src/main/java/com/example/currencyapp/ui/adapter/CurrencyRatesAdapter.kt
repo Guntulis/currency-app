@@ -4,11 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyapp.R.layout
 import com.example.currencyapp.data.model.CurrencyRate
+import com.example.currencyapp.data.model.CurrencyRate.Companion.TYPE_BASE
+import com.example.currencyapp.data.model.CurrencyRate.Companion.TYPE_NORMAL
 import com.example.currencyapp.ui.adapter.CurrencyRatesAdapter.ViewHolder
 import kotlinx.android.synthetic.main.currency_list_item.view.*
 
@@ -36,9 +39,12 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
             currencyRateImage.setImageResource(currencyRate.flagResId)
             currencyRateShortName.text = currencyRate.currencyIsoCode
             currencyRateLongName.text = context.getString(currencyRate.currencyNameResId)
-            currencyRateValue.text = String.format("%.2f", currencyRate.rate)
-            itemView.setOnClickListener {
-                currencyClickListener?.let { it(currencyRate, position) }
+            currencyRateValue.isEnabled = currencyRate.type == TYPE_BASE
+            currencyRateValue.setText(String.format("%.2f", currencyRate.rate))
+            if (currencyRate.type == TYPE_NORMAL) {
+                itemView.setOnClickListener {
+                    currencyClickListener?.let { it(currencyRate, position) }
+                }
             }
         }
     }
@@ -50,8 +56,8 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
     }
 
     fun moveItemToTop(item: CurrencyRate, pos: Int) {
-        item.type = CurrencyRate.TYPE_BASE
-        currencyRates[0].type = CurrencyRate.TYPE_NORMAL
+        item.type = TYPE_BASE
+        currencyRates[0].type = TYPE_NORMAL
         currencyRates.removeAt(pos)
         currencyRates.add(0, item)
         notifyItemMoved(pos, 0)
@@ -61,6 +67,6 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
         val currencyRateImage: AppCompatImageView = view.currencyImage
         val currencyRateShortName: TextView = view.currencyShortName
         val currencyRateLongName: TextView = view.currencyLongName
-        val currencyRateValue: TextView = view.currencyRate
+        val currencyRateValue: EditText = view.currencyRate
     }
 }

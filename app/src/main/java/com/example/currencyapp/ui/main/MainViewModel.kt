@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.example.currencyapp.data.AppPreferences
 import com.example.currencyapp.data.api.Resource.Complete
 import com.example.currencyapp.data.model.CurrencyRate
+import com.example.currencyapp.data.model.CurrencyRate.Companion.TYPE_BASE
+import com.example.currencyapp.data.model.CurrencyRate.Companion.TYPE_NORMAL
 import com.example.currencyapp.data.model.CurrencyRatesResponse
 import com.example.currencyapp.data.state.CurrencyRatesRepository
 import com.example.currencyapp.ui.util.SingleEventLiveData
@@ -44,10 +46,10 @@ class MainViewModel(
 
     private fun toCurrencyRateList(response: CurrencyRatesResponse): List<CurrencyRate> {
         val currencyCode = response.baseCurrency ?: appPreferences.ratesResponse
-        val rateList = arrayListOf(CurrencyRate(currencyCode.toFlag(), currencyCode, currencyCode.toCurrencyName(), 1f))
+        val rateList = arrayListOf(CurrencyRate(currencyCode.toFlag(), currencyCode, currencyCode.toCurrencyName(), 1f, TYPE_BASE))
         rateList.addAll(response.rates?.map { rate ->
             rate.run {
-                CurrencyRate(key.toFlag(), key, key.toCurrencyName(), calculateValue(value))
+                CurrencyRate(key.toFlag(), key, key.toCurrencyName(), calculateValue(value), TYPE_NORMAL)
             }
         }.orEmpty())
         return rateList
