@@ -32,8 +32,8 @@ class MainFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.adapter = currencyRatesAdapter
-        currencyRatesAdapter.currencyClickListener = {
-            viewModel.itemWasClicked(it)
+        currencyRatesAdapter.currencyClickListener = { currencyRate, pos ->
+            viewModel.itemWasClicked(currencyRate, pos)
         }
     }
 
@@ -49,6 +49,16 @@ class MainFragment : DaggerFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        viewModel.uiEvent.observeIt(this) {event ->
+            when (event) {
+                is UiEvent.MakeItemFirst -> {
+                    timer.stopTimer()
+                    currencyRatesAdapter.moveItemToTop(event.currencyRate, event.position)
+                    recyclerView.scrollToPosition(0)
+                    timer.startTimer()
+                }
+            }
+        }
         viewModel.listData.observeIt(this) { currencyRates ->
             currencyRates?.let {
                 currencyRatesAdapter.setItems(it)

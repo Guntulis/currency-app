@@ -26,16 +26,15 @@ class MainViewModel(
     private val gson = Gson()
     private val savedResponse =
         gson.fromJson(appPreferences.ratesResponse, CurrencyRatesResponse::class.java)
-    private var currentRates = toCurrencyRateList(savedResponse?.rates)
+    private var currentRates = toCurrencyRateList(savedResponse)
 
     val listData: LiveData<List<CurrencyRate>> =
         Transformations.map(currencyRatesRepository.currencyRatesResponseState) { response ->
             when (response) {
                 is Complete -> {
                     appPreferences.ratesResponse = gson.toJson(response.value)
-                    val rateList = toCurrencyRateList(response.value.rates)
-                    currentRates = rateList
-                    rateList
+                    currentRates = toCurrencyRateList(response.value)
+                    currentRates
                 }
                 else -> {
                     currentRates
@@ -43,12 +42,15 @@ class MainViewModel(
             }
         }
 
-    private fun toCurrencyRateList(rates: Map<String, Float>?): List<CurrencyRate> {
-        return rates?.map { rate ->
+    private fun toCurrencyRateList(response: CurrencyRatesResponse): List<CurrencyRate> {
+        val currencyCode = response.baseCurrency ?: appPreferences.ratesResponse
+        val rateList = arrayListOf(CurrencyRate(currencyCode.toFlag(), currencyCode, currencyCode.toCurrencyName(), 1f))
+        rateList.addAll(response.rates?.map { rate ->
             rate.run {
                 CurrencyRate(key.toFlag(), key, key.toCurrencyName(), calculateValue(value))
             }
-        }.orEmpty()
+        }.orEmpty())
+        return rateList
     }
 
     private fun calculateValue(value: Float): Float {
@@ -61,9 +63,10 @@ class MainViewModel(
         currencyRatesRepository.loadCurrencyRates(selectedCurrency)
     }
 
-    fun itemWasClicked(currencyRate: CurrencyRate) {
+    fun itemWasClicked(currencyRate: CurrencyRate, position: Int) {
         appPreferences.selectedCurrency = currencyRate.currencyIsoCode
         appPreferences.multiplier = 1
+        _uiEvent.value = UiEvent.MakeItemFirst(currencyRate, position)
     }
 
     companion object {
@@ -72,7 +75,7 @@ class MainViewModel(
 }
 
 sealed class UiEvent {
-    object MakeItemFirst : UiEvent()
+    class MakeItemFirst(val currencyRate: CurrencyRate, val position: Int) : UiEvent()
     object SendOrder : UiEvent()
     object ShowLogin : UiEvent()
 }

@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.currency_list_item.view.*
 
 class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<ViewHolder>() {
     private val currencyRates = ArrayList<CurrencyRate>()
-    var currencyClickListener: ((CurrencyRate) -> Unit)? = null
+    var currencyClickListener: ((CurrencyRate, Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -38,7 +38,7 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
             currencyRateLongName.text = context.getString(currencyRate.currencyNameResId)
             currencyRateValue.text = String.format("%.2f", currencyRate.rate)
             itemView.setOnClickListener {
-                currencyClickListener?.let { it(currencyRate) }
+                currencyClickListener?.let { it(currencyRate, position) }
             }
         }
     }
@@ -47,6 +47,14 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
         currencyRates.clear()
         currencyRates.addAll(newRates)
         notifyDataSetChanged()
+    }
+
+    fun moveItemToTop(item: CurrencyRate, pos: Int) {
+        item.type = CurrencyRate.TYPE_BASE
+        currencyRates[0].type = CurrencyRate.TYPE_NORMAL
+        currencyRates.removeAt(pos)
+        currencyRates.add(0, item)
+        notifyItemMoved(pos, 0)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
