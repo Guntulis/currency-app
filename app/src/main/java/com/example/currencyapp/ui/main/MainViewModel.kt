@@ -5,7 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.currencyapp.data.AppPreferences
-import com.example.currencyapp.data.api.Resource.Complete
+import com.example.currencyapp.data.api.Resource
+import com.example.currencyapp.data.api.Resource.*
 import com.example.currencyapp.data.model.CurrencyRate
 import com.example.currencyapp.data.model.CurrencyRate.Companion.TYPE_BASE
 import com.example.currencyapp.data.model.CurrencyRate.Companion.TYPE_NORMAL
@@ -26,33 +27,56 @@ class MainViewModel(
         get() = _uiEvent
 
     private val gson = Gson()
-    private val savedResponse =
-        gson.fromJson(appPreferences.ratesResponse, CurrencyRatesResponse::class.java)
-    private var currentRates = toCurrencyRateList(savedResponse)
+    private val savedResponse = appPreferences.ratesResponse?.let {
+        gson.fromJson(it, CurrencyRatesResponse::class.java)
+    }
 
-    val listData: LiveData<List<CurrencyRate>> =
+    private var currentRates: List<CurrencyRate>? = toCurrencyRateList(savedResponse)
+
+    val listData: LiveData<Resource<List<CurrencyRate>?>> =
         Transformations.map(currencyRatesRepository.currencyRatesResponseState) { response ->
             when (response) {
                 is Complete -> {
                     appPreferences.ratesResponse = gson.toJson(response.value)
                     currentRates = toCurrencyRateList(response.value)
-                    currentRates
+                    currentRates?.let {
+                        Complete(currentRates)
+                    } ?: Empty()
                 }
                 else -> {
-                    currentRates
+                    currentRates?.let {
+                        Complete(currentRates)
+                    } ?: Loading<List<CurrencyRate>?>()
                 }
             }
         }
 
-    private fun toCurrencyRateList(response: CurrencyRatesResponse): List<CurrencyRate> {
-        val currencyCode = response.baseCurrency ?: appPreferences.ratesResponse
-        val rateList = arrayListOf(CurrencyRate(currencyCode.toFlag(), currencyCode, currencyCode.toCurrencyName(), 1f, TYPE_BASE))
-        rateList.addAll(response.rates?.map { rate ->
-            rate.run {
-                CurrencyRate(key.toFlag(), key, key.toCurrencyName(), calculateValue(value), TYPE_NORMAL)
+    private fun toCurrencyRateList(ratesResponse: CurrencyRatesResponse?): List<CurrencyRate>? {
+        return ratesResponse?.let { response ->
+            response.baseCurrency?.let { currencyCode ->
+                val rateList = arrayListOf(
+                    CurrencyRate(
+                        currencyCode.toFlag(),
+                        currencyCode,
+                        currencyCode.toCurrencyName(),
+                        1f,
+                        TYPE_BASE
+                    )
+                )
+                rateList.addAll(response.rates?.map { rate ->
+                    rate.run {
+                        CurrencyRate(
+                            key.toFlag(),
+                            key,
+                            key.toCurrencyName(),
+                            calculateValue(value),
+                            TYPE_NORMAL
+                        )
+                    }
+                }.orEmpty())
+                rateList
             }
-        }.orEmpty())
-        return rateList
+        }
     }
 
     private fun calculateValue(value: Float): Float {

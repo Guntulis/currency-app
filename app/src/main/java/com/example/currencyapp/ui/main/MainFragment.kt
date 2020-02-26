@@ -3,8 +3,11 @@ package com.example.currencyapp.ui.main
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.example.currencyapp.data.Timer
+import com.example.currencyapp.data.api.Resource
 import com.example.currencyapp.databinding.MainFragmentBinding
 import com.example.currencyapp.ui.adapter.CurrencyRatesAdapter
 import com.example.currencyapp.ui.util.observeIt
@@ -49,7 +52,7 @@ class MainFragment : DaggerFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.uiEvent.observeIt(this) {event ->
+        viewModel.uiEvent.observeIt(this) { event ->
             when (event) {
                 is UiEvent.MakeItemFirst -> {
                     timer.stopTimer()
@@ -60,9 +63,27 @@ class MainFragment : DaggerFragment() {
             }
         }
         viewModel.listData.observeIt(this) { currencyRates ->
-            currencyRates?.let {
-                currencyRatesAdapter.setItems(it)
+            when (currencyRates) {
+                is Resource.Loading -> {
+                    recyclerView.visibility = INVISIBLE
+                    errorLabel.visibility = INVISIBLE
+                    progressBar.visibility = VISIBLE
+                }
+                is Resource.Complete -> {
+                    recyclerView.visibility = VISIBLE
+                    errorLabel.visibility = INVISIBLE
+                    progressBar.visibility = INVISIBLE
+                    currencyRates.value?.let {
+                        currencyRatesAdapter.setItems(it)
+                    }
+                }
+                else -> {
+                    recyclerView.visibility = INVISIBLE
+                    errorLabel.visibility = VISIBLE
+                    progressBar.visibility = INVISIBLE
+                }
             }
+
         }
         timer.timerEvent.observeIt(this) { event ->
             when (event) {

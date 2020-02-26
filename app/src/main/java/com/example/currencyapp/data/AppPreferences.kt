@@ -6,8 +6,8 @@ import android.content.SharedPreferences
 class AppPreferences(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 
-    var ratesResponse: String
-        get() = prefs.getString(RATES_RESPONSE_KEY, "")!!
+    var ratesResponse: String?
+        get() = prefs.getString(RATES_RESPONSE_KEY, null)!!
         set(value) = prefs.edit().putString(RATES_RESPONSE_KEY, value).apply()
 
     var multiplier: Int

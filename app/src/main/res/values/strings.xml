@@ -35,4 +35,6 @@
     <string name="united_states">US dollar</string>
     <string name="south_africa">South African rand</string>
     <string name="unknown">n/a</string>
+    <string name="one">1</string>
+    <string name="error_label">Failed to load data. Please check your internet connection</string>
 </resources>
