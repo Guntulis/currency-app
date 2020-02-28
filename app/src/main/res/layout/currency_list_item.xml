@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/content_padding"
         android:digits="0123456789.,"
-        android:hint="@string/one"
+        android:hint="@string/zero"
         android:inputType="numberDecimal"
         android:letterSpacing="0.02"
         android:textColor="@color/black"
