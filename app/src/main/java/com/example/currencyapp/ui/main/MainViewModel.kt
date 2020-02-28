@@ -96,7 +96,9 @@ class MainViewModel(
     }
 
     fun setMultiplier(multiplier: Float) {
+        Log.d(TAG, "Changing multiplier to $multiplier")
         appPreferences.multiplier = multiplier
+        currentRates?.first()?.rate = multiplier
     }
 
     companion object {

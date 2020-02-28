@@ -4,7 +4,7 @@ data class CurrencyRate(
     val flagResId: Int,
     val currencyIsoCode: String,
     val currencyNameResId: Int,
-    val rate: Float,
+    var rate: Float,
     var type: Int
 ) {
     companion object {

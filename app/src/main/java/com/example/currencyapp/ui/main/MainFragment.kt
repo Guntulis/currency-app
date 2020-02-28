@@ -39,13 +39,15 @@ class MainFragment : DaggerFragment() {
             viewModel.itemWasClicked(currencyRate, pos)
         }
         currencyRatesAdapter.baseValueChangeListener = { baseValue ->
+            timer.stopTimer()
             viewModel.setMultiplier(baseValue)
+            timer.startTimer(ONE_SECOND)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        timer.startTimer()
+        timer.startTimer(ONE_SECOND)
     }
 
     override fun onPause() {
@@ -61,7 +63,7 @@ class MainFragment : DaggerFragment() {
                     timer.stopTimer()
                     currencyRatesAdapter.moveItemToTop(event.currencyRate, event.position)
                     recyclerView.scrollToPosition(0)
-                    timer.startTimer()
+                    timer.startTimer(ONE_SECOND)
                 }
             }
         }
@@ -99,5 +101,6 @@ class MainFragment : DaggerFragment() {
 
     companion object {
         fun newInstance(): MainFragment = MainFragment()
+        private const val ONE_SECOND = 1000L
     }
 }

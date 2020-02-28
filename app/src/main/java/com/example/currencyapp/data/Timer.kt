@@ -20,8 +20,8 @@ class Timer {
         }
     }
 
-    fun startTimer() {
-        handler.post(task)
+    fun startTimer(delay: Long) {
+        handler.postDelayed(task, delay)
     }
 
     fun stopTimer() {
