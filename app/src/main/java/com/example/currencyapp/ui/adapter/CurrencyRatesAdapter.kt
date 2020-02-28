@@ -13,6 +13,7 @@ import com.example.currencyapp.data.model.CurrencyRate
 import com.example.currencyapp.data.model.CurrencyRate.Companion.TYPE_BASE
 import com.example.currencyapp.data.model.CurrencyRate.Companion.TYPE_NORMAL
 import com.example.currencyapp.ui.adapter.CurrencyRatesAdapter.ViewHolder
+import com.example.currencyapp.ui.util.format
 import com.example.currencyapp.ui.util.moveCursorAtEnd
 import kotlinx.android.synthetic.main.currency_list_item.view.*
 
@@ -41,7 +42,7 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
             currencyRateShortName.text = currencyRate.currencyIsoCode
             currencyRateLongName.text = context.getString(currencyRate.currencyNameResId)
             currencyRateValue.isEnabled = currencyRate.type == TYPE_BASE
-            currencyRateValue.setText(String.format("%.2f", currencyRate.rate))
+            currencyRateValue.setText(currencyRate.rate.format())
             if (currencyRate.type == TYPE_NORMAL) {
                 itemView.setOnClickListener {
                     currencyClickListener?.let { it(currencyRate, position) }
