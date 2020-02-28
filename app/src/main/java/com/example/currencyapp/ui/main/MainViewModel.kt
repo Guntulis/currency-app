@@ -59,7 +59,7 @@ class MainViewModel(
                         currencyCode.toFlag(),
                         currencyCode,
                         currencyCode.toCurrencyName(),
-                        1f,
+                        appPreferences.multiplier,
                         TYPE_BASE
                     )
                 )
@@ -91,8 +91,12 @@ class MainViewModel(
 
     fun itemWasClicked(currencyRate: CurrencyRate, position: Int) {
         appPreferences.selectedCurrency = currencyRate.currencyIsoCode
-        appPreferences.multiplier = 1
+        appPreferences.multiplier = currencyRate.rate
         _uiEvent.value = UiEvent.MakeItemFirst(currencyRate, position)
+    }
+
+    fun setMultiplier(multiplier: Float) {
+        appPreferences.multiplier = multiplier
     }
 
     companion object {
@@ -102,6 +106,4 @@ class MainViewModel(
 
 sealed class UiEvent {
     class MakeItemFirst(val currencyRate: CurrencyRate, val position: Int) : UiEvent()
-    object SendOrder : UiEvent()
-    object ShowLogin : UiEvent()
 }

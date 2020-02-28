@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyapp.R.layout
 import com.example.currencyapp.data.model.CurrencyRate
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.currency_list_item.view.*
 class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<ViewHolder>() {
     private val currencyRates = ArrayList<CurrencyRate>()
     var currencyClickListener: ((CurrencyRate, Int) -> Unit)? = null
+    var baseValueChangeListener: ((Float) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -41,15 +43,26 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
             currencyRateImage.setImageResource(currencyRate.flagResId)
             currencyRateShortName.text = currencyRate.currencyIsoCode
             currencyRateLongName.text = context.getString(currencyRate.currencyNameResId)
-            currencyRateValue.isEnabled = currencyRate.type == TYPE_BASE
-            currencyRateValue.setText(currencyRate.rate.format())
-            if (currencyRate.type == TYPE_NORMAL) {
-                itemView.setOnClickListener {
-                    currencyClickListener?.let { it(currencyRate, position) }
+
+            currencyRateValue.apply {
+                isEnabled = currencyRate.type == TYPE_BASE
+                tag = "programmatically"
+                setText(currencyRate.rate.format())
+                tag = null
+                if (currencyRate.type == TYPE_NORMAL) {
+                    itemView.setOnClickListener {
+                        currencyClickListener?.let { it(currencyRate, position) }
+                    }
+                } else {
+                    requestFocus()
+                    moveCursorAtEnd()
+                    doAfterTextChanged { text ->
+                        val floatValue = text.toString().toFloatOrNull() ?: 0F
+                        if (floatValue != currencyRate.rate && tag == null) {
+                            baseValueChangeListener?.let { it(floatValue) }
+                        }
+                    }
                 }
-            } else {
-                currencyRateValue.requestFocus()
-                currencyRateValue.moveCursorAtEnd()
             }
         }
     }

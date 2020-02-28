@@ -38,6 +38,9 @@ class MainFragment : DaggerFragment() {
         currencyRatesAdapter.currencyClickListener = { currencyRate, pos ->
             viewModel.itemWasClicked(currencyRate, pos)
         }
+        currencyRatesAdapter.baseValueChangeListener = { baseValue ->
+            viewModel.setMultiplier(baseValue)
+        }
     }
 
     override fun onResume() {

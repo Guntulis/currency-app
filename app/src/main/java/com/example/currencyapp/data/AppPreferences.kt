@@ -10,9 +10,9 @@ class AppPreferences(context: Context) {
         get() = prefs.getString(RATES_RESPONSE_KEY, null)
         set(value) = prefs.edit().putString(RATES_RESPONSE_KEY, value).apply()
 
-    var multiplier: Int
-        get() = prefs.getInt(MULTIPLIER_KEY, DEFAULT_MULTIPLIER)
-        set(value) = prefs.edit().putInt(MULTIPLIER_KEY, value).apply()
+    var multiplier: Float
+        get() = prefs.getFloat(MULTIPLIER_KEY, DEFAULT_MULTIPLIER)
+        set(value) = prefs.edit().putFloat(MULTIPLIER_KEY, value).apply()
 
     var selectedCurrency: String
         get() = prefs.getString(SELECTED_CURRENCY_KEY, DEFAULT_CURRENCY)!!
@@ -24,6 +24,6 @@ class AppPreferences(context: Context) {
         private const val MULTIPLIER_KEY = "multiplier"
         private const val SELECTED_CURRENCY_KEY = "selectedCurrency"
         private const val DEFAULT_CURRENCY = "EUR"
-        private const val DEFAULT_MULTIPLIER = 1
+        private const val DEFAULT_MULTIPLIER = 1f
     }
 }
