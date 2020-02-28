@@ -81,6 +81,10 @@ class CurrencyRatesAdapter(private val context: Context) : RecyclerView.Adapter<
         notifyItemMoved(pos, 0)
     }
 
+    override fun getItemId(position: Int): Long {
+        return currencyRates[position].currencyNameResId.toLong()
+    }
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val currencyRateImage: AppCompatImageView = view.currencyImage
         val currencyRateShortName: TextView = view.currencyShortName

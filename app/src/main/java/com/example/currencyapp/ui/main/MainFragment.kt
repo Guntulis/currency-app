@@ -34,6 +34,7 @@ class MainFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        currencyRatesAdapter.setHasStableIds(true)
         recyclerView.adapter = currencyRatesAdapter
         currencyRatesAdapter.currencyClickListener = { currencyRate, pos ->
             viewModel.itemWasClicked(currencyRate, pos)
