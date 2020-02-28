@@ -6,10 +6,12 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyapp.data.Timer
 import com.example.currencyapp.data.api.Resource
 import com.example.currencyapp.databinding.MainFragmentBinding
 import com.example.currencyapp.ui.adapter.CurrencyRatesAdapter
+import com.example.currencyapp.ui.util.hideKeyboard
 import com.example.currencyapp.ui.util.observeIt
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.main_fragment.*
@@ -36,6 +38,14 @@ class MainFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         currencyRatesAdapter.setHasStableIds(true)
         recyclerView.adapter = currencyRatesAdapter
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    hideKeyboard()
+                }
+            }
+        })
         currencyRatesAdapter.currencyClickListener = { currencyRate, pos ->
             viewModel.itemWasClicked(currencyRate, pos)
         }
@@ -64,7 +74,7 @@ class MainFragment : DaggerFragment() {
                     timer.stopTimer()
                     currencyRatesAdapter.moveItemToTop(event.currencyRate, event.position)
                     recyclerView.scrollToPosition(0)
-                    timer.startTimer(ONE_SECOND)
+                    timer.startTimer(0)
                 }
             }
         }
